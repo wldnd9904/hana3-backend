@@ -12,7 +12,29 @@ import java.util.Scanner;
 //더 이상 놓을 자리가 없으면, 자동으로 게임이 종료됩니다.
 public class mp03 {
     public static void main(String[] args) {
-        init();
+        Othello othello = new Othello();
+        othello.run();
+    }
+}
+
+class Othello {
+    private int[][] map;
+    private boolean[][] settable;
+    private final int SIZE = 8;
+    static final char[] signs = {' ', '●', '◯', '•'};
+    static final int[] dx = {-1, -1, -1, 0, 1, 1, 1, 0};
+    static final int[] dy = {1, 0, -1, -1, -1, 0, 1, 1};
+
+    public Othello() {
+        map = new int[SIZE + 1][SIZE + 1]; // 0으로 자동초기화
+        map[SIZE / 2][SIZE / 2] = 1;
+        map[SIZE / 2 + 1][SIZE / 2 + 1] = 1;
+        map[SIZE / 2 + 1][SIZE / 2] = 2;
+        map[SIZE / 2][SIZE / 2 + 1] = 2;
+        updateSettable(1);
+    }
+
+    public void run() {
         printMap();
         Scanner sc = new Scanner(System.in);
         while (!isGameEnded()) {
@@ -48,23 +70,7 @@ public class mp03 {
         }
     }
 
-    static int[][] map;
-    static boolean[][] settable;
-    static final int SIZE = 8;
-    static final char[] signs = {' ', '●', '◯', '•'};
-    static final int[] dx = {-1, -1, -1, 0, 1, 1, 1, 0};
-    static final int[] dy = {1, 0, -1, -1, -1, 0, 1, 1};
-
-    static void init() {
-        map = new int[SIZE + 1][SIZE + 1]; // 0으로 자동초기화
-        map[SIZE / 2][SIZE / 2] = 1;
-        map[SIZE / 2 + 1][SIZE / 2 + 1] = 1;
-        map[SIZE / 2 + 1][SIZE / 2] = 2;
-        map[SIZE / 2][SIZE / 2 + 1] = 2;
-        updateSettable(1);
-    }
-
-    static boolean isGameEnded() {
+    private boolean isGameEnded() {
         //모든 칸에 대해
         for (int y = 1; y <= SIZE; y++)
             for (int x = 1; x <= SIZE; x++)
@@ -73,12 +79,12 @@ public class mp03 {
         return true;
     }
 
-    static boolean check(int y, int x) {
+    private boolean check(int y, int x) {
         if (x < 1 || y < 1 || x > SIZE || y > SIZE) return false;
         return true;
     }
 
-    static void updateSettable(int my) {
+    private void updateSettable(int my) {
         final int opponent = 3 - my;
         settable = new boolean[SIZE + 1][SIZE + 1];
         //모든 칸에 대해
@@ -103,7 +109,7 @@ public class mp03 {
         }
     }
 
-    static void autoPut() {
+    private void autoPut() {
         ArrayList<Integer> xCand = new ArrayList<Integer>();
         ArrayList<Integer> yCand = new ArrayList<Integer>();
         //모든 칸에 대해
@@ -125,7 +131,7 @@ public class mp03 {
         put(xCand.get(idx), yCand.get(idx), 2);
     }
 
-    static boolean put(int x, int y, int my) {
+    private boolean put(int x, int y, int my) {
         if (!settable[y][x])
             return false;
         map[y][x] = my;
@@ -150,7 +156,7 @@ public class mp03 {
         return true;
     }
 
-    static void printMap() {
+    private void printMap() {
         System.out.print("| X ");
         for (int y = 1; y <= SIZE; y++) {
             System.out.printf("| %d ", y);
@@ -168,7 +174,7 @@ public class mp03 {
         printScore();
     }
 
-    static int printScore() {
+    private int printScore() {
         int my = 0, opp = 0;
         //모든 칸에 대해
         for (int y = 1; y <= SIZE; y++) {
@@ -181,7 +187,7 @@ public class mp03 {
         return my - opp;
     }
 
-    static void printHLine(int length) {
+    private void printHLine(int length) {
         for (int y = 0; y < length; y++) {
             System.out.print("-");
         }

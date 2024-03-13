@@ -1,9 +1,16 @@
 import java.util.Scanner;
 
 public class mp02 {
-    static int[] bias = {-1, 0, 1};
-
     public static void main(String[] args) {
+        Minesweeper minesweeper = new Minesweeper();
+        minesweeper.run();
+    }
+}
+
+class Minesweeper {
+    static final int[] bias = {-1, 0, 1};
+
+    public void run() {
         Scanner sc = new Scanner(System.in);
         int width, height, mineCount;
 
@@ -30,11 +37,11 @@ public class mp02 {
                     checkAndPlus(map, y + yBias, x + xBias);
         }
 
-        printMap(map, false);
+        //printMap(map, false);
         printMap(map, true);
     }
 
-    static void printMap(int[][] map, boolean printNumber) {
+    private void printMap(int[][] map, boolean printNumber) {
         for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map[0].length; x++) {
                 if (map[y][x] == -1) System.out.print("*");
@@ -45,7 +52,7 @@ public class mp02 {
         System.out.println();
     }
 
-    static void checkAndPlus(int[][] map, int y, int x) {
+    private void checkAndPlus(int[][] map, int y, int x) {
         if (y >= 0 && y < map.length && x >= 0 && x < map[0].length) {
             if (map[y][x] != -1)
                 map[y][x] += 1;

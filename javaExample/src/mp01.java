@@ -1,8 +1,4 @@
-import java.io.IOException;
 import java.util.Scanner;
-
-import static java.time.InstantSource.system;
-
 
 public class mp01 {
     // 0:빈칸 1:벽 2:사람 3:골인

@@ -3,45 +3,26 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
-
 public class mp04 {
     public static void main(String[] args) {
-        init();
-        generateFruit();
-        Scanner sc = new Scanner(System.in);
-        int dir = -1;
-        while (dir == -1 || move(dir)) {
-            printMap();
-            System.out.print("이동(wasd):");
-            char input = sc.next().charAt(0);
-            sc.nextLine();
-            dir = switch (input) {
-                case 'w' -> 3;
-                case 'a' -> 0;
-                case 's' -> 2;
-                case 'd' -> 1;
-                default -> -1;
-            };
-        }
-        System.out.println("게임 종료");
+        Snake snake = new Snake(8);
+        snake.run();
     }
+}
 
-    static int[][] map;
-    static final int SIZE = 8;
-    static final int MAXLENGTH = (SIZE - 1) * (SIZE - 1);
+class Snake {
+    private int[][] map;
+    private final int SIZE;
+    private final int MAXLENGTH;
     static final char[] signs = {'.', '^', '@', '~', '#'}; //빈칸, 벽, 머리, 몸(꼬리), 과일
     static final int[] dx = {-1, +1, 0, 0}; // a, d, s, w
     static final int[] dy = {0, 0, +1, -1};
-    static Queue<Point> snake;
-    static int headX, headY;
+    private final Queue<Point> snake;
+    private int headX, headY;
 
-    static void push(int x, int y) {
-        headX = x;
-        headY = y;
-        snake.add(new Point(x, y));
-    }
-
-    static void init() {
+    public Snake(int size) {
+        SIZE = size;
+        MAXLENGTH = (SIZE - 1) * (SIZE - 1);
         map = new int[SIZE + 1][SIZE + 1]; // 0으로 자동초기화
         //벽채우기
         for (int i = 0; i <= SIZE; i++) {
@@ -56,7 +37,33 @@ public class mp04 {
         map[initY][initX] = 2;
     }
 
-    static boolean move(int dir) {
+    public void run() {
+        generateFruit();
+        Scanner sc = new Scanner(System.in);
+        int dir = 0;
+        while (dir != -1 && move(dir)) {
+            printMap();
+            System.out.print("이동(wasd):");
+            char input = sc.next().charAt(0);
+            sc.nextLine();
+            dir = switch (input) {
+                case 'w' -> 3;
+                case 'a' -> 0;
+                case 's' -> 2;
+                case 'd' -> 1;
+                default -> -1; //종료
+            };
+        }
+        System.out.println("게임 종료");
+    }
+
+    private void push(int x, int y) {
+        headX = x;
+        headY = y;
+        snake.add(new Point(x, y));
+    }
+
+    private boolean move(int dir) {
         if (snake.isEmpty()) return false;
         int nextX = headX + dx[dir];
         int nextY = headY + dy[dir];
@@ -89,7 +96,7 @@ public class mp04 {
         return true;
     }
 
-    static void generateFruit() {
+    private void generateFruit() {
         //많이 채웠으면 남은거중 하나
         if (snake.size() > (MAXLENGTH * 0.8)) {
             int idx = (int) (Math.random() * (MAXLENGTH - snake.size()));
@@ -114,7 +121,7 @@ public class mp04 {
         map[y][x] = 4;
     }
 
-    static void printMap() {
+    private void printMap() {
         for (int y = 0; y <= SIZE; y++) {
             for (int x = 0; x <= SIZE; x++) {
                 System.out.print(signs[map[y][x]]);
