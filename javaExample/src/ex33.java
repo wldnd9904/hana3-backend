@@ -2,6 +2,15 @@
 //클래스 이름 : HanaAccount
 //  필드 : 계좌번호(1234), 고객이름(홍길동), 잔액(1000), 이자율(년3%)
 //  메소드 : 입금(+100), 출금(-100), 이자계산(1년후 잔액), 잔액조회
+class OverdrawnException extends Exception {
+    private String detailMessage = "잔액이 부족합니다.";
+
+    @Override
+    public String getMessage() {
+        return detailMessage;
+    }
+}
+
 class HanaAccount {
     private int 계좌번호 = 1234;
     private String 고객이름 = "홍길동";
@@ -19,7 +28,8 @@ class HanaAccount {
         this.잔액 += x;
     }
 
-    public void 출금(int x) {
+    public void 출금(int x) throws OverdrawnException {
+        if (this.잔액 < x) throw new OverdrawnException();
         System.out.println(x + "원 출금");
         this.잔액 -= x;
     }
@@ -62,7 +72,11 @@ public class ex33 {
         account.입금(100);
         System.out.println("입금 후 잔액: " + account.잔액조회());
         //2. 출금 메소드 호출
-        account.출금(100);
+        try {
+            account.출금(1000000);
+        } catch (OverdrawnException e) {
+            System.out.println(e.getMessage());
+        }
         System.out.println("출금 후 잔액: " + account.잔액조회());
         //3. 이자계산은 이자율을 읽어서 참조한다.
         System.out.println("이자율: " + account.get이자율() + "%");
