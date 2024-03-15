@@ -20,11 +20,11 @@ class Program {
     private StudentDAO dao;
 
     public Program(Scanner sc) {
-        this.dao = new StudentDAO();
         this.sc = sc;
     }
 
     public void run() {
+        this.dao = new StudentDAO();
         loop:
         while (true) {
             prompt();
@@ -51,6 +51,7 @@ class Program {
                     break loop;
             }
         }
+        dao.close();
     }
 
     private void prompt() {
