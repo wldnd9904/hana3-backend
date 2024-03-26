@@ -13,7 +13,8 @@ public class ex65 {
         //LocalTime: 시간
         //LocalDateTime : 날짜 시간
         LocalDate now = LocalDate.now();
-        LocalDate birthDay = LocalDate.of(1999, 4, 28);
+        LocalDate birthDay = LocalDate.of(1999, 1, 1);
+        System.out.println(birthDay.getDayOfWeek());
         LocalDate xMas = LocalDate.parse("2024-02-25");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate childrenDay = LocalDate.parse("2024/05/05", df);

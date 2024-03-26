@@ -11,7 +11,6 @@ public class ex66 {
         fruits.add("strawberry");
         System.out.println(fruits.size());
         System.out.println(fruits);
-
         fruits.add(0, "lemon");
         System.out.println(fruits);
 

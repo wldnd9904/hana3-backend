@@ -51,6 +51,7 @@ public class ex06 {
         System.out.println(str6.toLowerCase());
         //4. str5와 str6을 concat 함수로 연결하여 출력하시오.
         System.out.println(str5.concat(str6));
+        System.out.println(str5);
         //5. str7의 시작과 끝 공백만 제거하여 출력하시오.
         System.out.println(str7.trim());
         //6. str7의 모든 공백을 *로 치환하여 출력하시오.
