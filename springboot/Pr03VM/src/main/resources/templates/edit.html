@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${languagePack.get('자판기')}">자판기</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div
+        class="flex flex-col bg-red-700 p-2 gap-2 text-white font-bold"
+>
+    <h1 th:text="${languagePack.get('자판기 상품 수정')}" class="text-center text-white">
+        자판기 상품 수정
+    </h1>
+    <form class="flex flex-col gap-2"
+          th:action="|/${languagePack.get('lang')}/edit|"
+          method="post">
+        <label>
+            <span th:text="${languagePack.get('상품명:')}">상품명:</span>
+            <input th:value="${product.getName()}" class="w-full rounded p-0.5 text-black" name="name" type="text"
+                   required/>
+        </label>
+        <label>
+            <span th:text="${languagePack.get('가격:')}">가격:</span>
+            <input th:value="${product.getPrice()}" class="w-full rounded p-0.5 text-black" name="price" type="number"
+                   required/>
+        </label>
+        <label>
+            <span th:text="${languagePack.get('유통기한:')}">유통기한:</span>
+            <input th:value="${product.getLimit_date()}" class="w-full rounded p-0.5 text-black" name="limit_date"
+                   type="date"
+                   required/>
+        </label>
+        <input type="hidden" name="index" th:value="${ index }">
+        <div class="flex flex-row justify-center gap-2">
+            <input type="submit" class="bg-black rounded p-1 px-4 w-fit" th:value="${languagePack.get('상품 수정 완료!')}"/>
+            <input type="button" onclick="history.back();" class="bg-white text-black rounded p-1 px-4 w-fit"
+                   th:value="${languagePack.get('돌아가기')}"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>
