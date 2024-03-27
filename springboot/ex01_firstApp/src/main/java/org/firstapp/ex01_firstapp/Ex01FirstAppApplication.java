@@ -40,6 +40,7 @@ public class Ex01FirstAppApplication {
 
     //프로그램 시작점
     public static void main(String[] args) {
+        SpringApplication.run(Ex01FirstAppApplication.class, args);
         System.out.println("hello spring");
         ApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
         Student obj = (Student) context.getBean("student");
@@ -48,7 +49,6 @@ public class Ex01FirstAppApplication {
         String[] beanDefinitionNames = context.getBeanDefinitionNames();
         System.out.println(Arrays.toString(beanDefinitionNames));
 
-        SpringApplication.run(Ex01FirstAppApplication.class, args);
 
     }
 
