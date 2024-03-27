@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>카운터</title>
+</head>
+<body>
+<h2>카운트: <span id="count" th:text="${count}"></span></h2>
+<button onclick="serverFetch('/plus')">더하기</button>
+<button onclick="serverFetch('/minus')">빼기</button>
+</body>
+<script>
+    const serverFetch = (url) => {
+        console.log("요청: ", url);
+        fetch(url).then(res=>res.json()).then((json)=>{
+            console.log("응답: ",json);
+            const count = document.getElementById("count");
+            count.innerText = json.count;
+        })
+    }
+</script>
+</html>

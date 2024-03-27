@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>계산기</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="flex flex-column justify-center m-5">
+    <form class="flex flex-col w-1.0 gap-1" id="form">
+        <label class="flex justify-between">
+            숫자 1
+            <input class="bg-gray-300 border border-gray-500 p-1 text-center mx-2" id="num1" name="num1" type="number"
+                   th:value="|${inputA}|" value="0"/>
+        </label>
+        <label class="flex justify-between">
+            숫자 2
+            <input class="bg-gray-300 border border-gray-500 p-1 text-center mx-2" id="num2" name="num2" type="number"
+                   th:value="|${inputB}|" value="0"/>
+        </label>
+        <label class="flex justify-between mb-2">
+            연산 결과
+            <input class="bg-gray-500 border border-gray-500 p-1 text-center mx-2 text-white" id="result"
+                   type="text" disabled th:value="|${result}|" value="0"/>
+        </label>
+        <button class="bg-blue-500 p-1 text-white" type="button" onClick="fetchCalc('/add')">덧셈</button>
+        <button class="bg-blue-500 p-1 text-white" type="button" onClick="fetchCalc('/sub')">뺄셈</button>
+        <button class="bg-blue-500 p-1 text-white" type="button" onClick="fetchCalc('/mul')">곱셈</button>
+        <button class="bg-blue-500 p-1 text-white" type="button" onClick="fetchCalc('/div')">나눗셈</button>
+        <button class="bg-red-500 p-1 text-white" type="button" onclick="resetForm()">지우기</button>
+    </form>
+</div>
+</body>
+<script>
+    const fetchCalc = (url) => {
+        const form = document.getElementById("form");
+        if(!form) return;
+        const data = new FormData(form);
+        console.log("요청: ",url,data);
+        fetch(url, {method:"POST",body:data}).then(res=>res.json()).then(json=>{
+            console.log("응답: ",json);
+            if(json.status==="ok")
+                document.getElementById("result").value = json.result;
+        })
+    }
+    const resetForm = () => {
+        document.getElementById("num1").value = "0";
+        document.getElementById("num2").value = "0";
+        document.getElementById("result").value = "0";
+    }
+</script>
+</html>

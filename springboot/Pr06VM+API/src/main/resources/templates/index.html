@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${languagePack.get('자판기')}">자판기</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body onload="fetchProducts()">
+<!--메인화면-->
+<div id="main" class="flex flex-col bg-red-700 p-2 gap-2 text-white font-bold">
+    <!-- 상단부 -->
+    <h1 th:text="${languagePack.get('★자판기 프로그램★')}" class="bg-white text-center rounded-t-lg text-red-700">
+        ★자판기 프로그램★
+    </h1>
+    <div class="flex flex-row vertical-align-center">
+        <h1 th:text="${languagePack.get('▽ 자판기 상품 목록')}" class="bg-white text-center rounded-r-lg text-red-700 w-1/3">
+            ▽ 자판기 상품 목록
+        </h1>
+        <div class="flex w-7/12 flex-row justify-center items-center">
+            한글
+            <a th:href="${languagePack.get('lang').equals('eng')? '/kor':'/eng'}"
+               th:class="|border border-white border-2 rounded-full w-8 h-4 box-content ${languagePack.get('lang').equals('eng') ? 'text-right':'text-left'} mx-2|"
+            >
+                <span class="relative -top-1"> ● </span>
+            </a>
+            ENG
+        </div>
+        <span
+                class="w-1/12 border border-white border-2 rounded-full text-center"
+                style="letter-spacing: -0.2rem; text-indent: -0.2rem"
+        >
+          ----
+        </span>
+    </div>
+    <!-- 중하단부 -->
+
+    <!-- 상품 목록-->
+    <div id="productDiv" class="bg-white text-center text-black p-1">
+        <h1 th:text="${languagePack.get('상품 목록이 비어있습니다.')}">상품 목록이 비어있습니다.</h1>
+    </div>
+    <div class="flex flex-row">
+        <div class="w-7/12"></div>
+        <h1 class="bg-white text-center w-5/12 rounded-l-lg text-red-700">
+            <span th:text="${languagePack.get('▲ 총 ')}">▲ 총 </span>
+            <span id="count" class="text-black">1</span>
+            <span th:text="${languagePack.get('개의 상품이 있습니다.')}">개의 상품이 있습니다.</span>
+        </h1>
+    </div>
+    <a th:text="${languagePack.get('상품 추가하기!')}" onclick="goToNew();"
+       class="bg-red-500 rounded p-1 px-4 w-fit mx-auto">
+        상품 추가하기!
+    </a>
+</div>
+
+<div id="edit" class="flex flex-col bg-red-700 p-2 gap-2 text-white font-bold" style="display:none;">
+    <h1 th:text="${languagePack.get('자판기 상품 수정')}" class="text-center text-white">
+        자판기 상품 수정
+    </h1>
+    <form class="flex flex-col gap-2"
+          th:action="|/${languagePack.get('lang')}/edit|"
+          method="post">
+        <label>
+            <span th:text="${languagePack.get('상품명:')}">상품명:</span>
+            <input class="w-full rounded p-0.5 text-black" id="editItemName" name="name" type="text"
+                   required/>
+        </label>
+        <label>
+            <span th:text="${languagePack.get('가격:')}">가격:</span>
+            <input class="w-full rounded p-0.5 text-black" id="editItemPrice" name="price" type="number"
+                   required/>
+        </label>
+        <label>
+            <span th:text="${languagePack.get('유통기한:')}">유통기한:</span>
+            <input class="w-full rounded p-0.5 text-black" id="editItemLimitDate" name="limit_date"
+                   type="date"
+                   required/>
+        </label>
+        <input type="hidden" id="editItemIndex" name="index" />
+        <div class="flex flex-row justify-center gap-2">
+            <input type="button" onclick="editItem();" class="bg-black rounded p-1 px-4 w-fit" th:value="${languagePack.get('상품 수정 완료!')}"/>
+            <input type="button" onclick="goToMain();" class="bg-white text-black rounded p-1 px-4 w-fit"
+                   th:value="${languagePack.get('돌아가기')}"/>
+        </div>
+    </form>
+</div>
+
+<div id="new" class="flex flex-col bg-red-700 p-2 gap-2 text-white font-bold" style="display:none;">
+    <h1 th:text="${languagePack.get('자판기 상품 추가')}" class="text-center text-white">
+        자판기 상품 추가
+    </h1>
+    <form class="flex flex-col gap-2"
+          th:action="|/${languagePack.get('lang')}/new|"
+          method="post">
+        <label>
+            <span th:text="|${languagePack.get('상품명')}:|">상품명:</span>
+            <input class="w-full rounded p-0.5 text-black" id="newItemName" name="name" type="text" required/>
+        </label>
+        <label>
+            <span th:text="|${languagePack.get('가격')}:|">가격:</span>
+            <input class="w-full rounded p-0.5 text-black" id="newItemPrice" name="price" type="number" required/>
+        </label>
+        <label>
+            <span th:text="|${languagePack.get('유통기한')}:|">유통기한:</span>
+            <input class="w-full rounded p-0.5 text-black" id="newItemLimitDate" name="limit_date" type="date" required/>
+        </label>
+        <div class="flex flex-row justify-center gap-2">
+            <input type="button" onclick="newItem();" class="bg-black rounded p-1 px-4 w-fit" th:value="${languagePack.get('상품 추가 완료!')}"/>
+            <input type="button" onclick="goToMain();" class="bg-white text-black rounded p-1 px-4 w-fit"
+                   th:value="${languagePack.get('돌아가기')}"/>
+        </div>
+    </form>
+</div>
+
+
+</body>
+<script th:inline="javascript">
+    const goToMain = () => {
+        document.getElementById("main").style.display = "";
+        document.getElementById("new").style.display = "none";
+        document.getElementById("edit").style.display = "none";
+    }
+    const goToEdit = (index) => {
+        document.getElementById("main").style.display = "none";
+        document.getElementById("new").style.display = "none";
+        document.getElementById("edit").style.display = "";
+        console.log("요청: ",`/get?index=${index}`);
+        fetch(`/get?index=${index}`).then(res=>res.json()).then(product=> {
+            console.log("응답: ",product);
+            document.getElementById("editItemName").value = `${product.name}`;
+            document.getElementById("editItemPrice").value = `${product.price}`;
+            document.getElementById("editItemLimitDate").value = `${product.limit_date}`;
+            document.getElementById("editItemIndex").value = `${index}`;
+        });
+    }
+    const goToNew = () => {
+        document.getElementById("main").style.display = "none";
+        document.getElementById("new").style.display = "";
+        document.getElementById("edit").style.display = "none";
+        document.getElementById("newItemName").value = "";
+        document.getElementById("newItemPrice").value = "";
+        document.getElementById("newItemLimitDate").value = "";
+    }
+    const fetchProducts = () => {
+        console.log("요청: ",`/products`);
+        //상품 가져오기
+        fetch('/products').then(res=>res.json()).then(json=>{
+            console.log("응답: ",json)
+            applyProducts(json);
+        });
+    }
+    const applyProducts = (products) => {
+        const productDiv = document.getElementById("productDiv");
+        const table = document.createElement("table");
+        table.className = "border border-red-700 w-full";
+        const thead = document.createElement("thead");
+        table.appendChild(thead);
+        const theadr = document.createElement("tr");
+        theadr.innerHTML = [[|
+                <td class="border border-red-700 p-2 text-red-700">${languagePack.get('번호')}</td>
+                <td class="border border-red-700 p-2">${languagePack.get('상품명')}</td>
+                <td class="border border-red-700 p-2">${languagePack.get('가격')}</td>
+                <td class="border border-red-700 p-2">${languagePack.get('유통기한')}</td>
+                <td class="border border-red-700 p-2">${languagePack.get('수정')}</td>
+                <td class="border border-red-700 p-2">${languagePack.get('삭제')}</td>
+                |]];
+        thead.appendChild(theadr);
+
+        const tbody = document.createElement("tbody");
+        for(const i in products){
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td class="border border-red-700 p-2">${1+(+i)}</td>
+                <td class="border border-red-700 p-2">${products[i].name}</td>
+                <td class="border border-red-700 p-2">${products[i].price}</td>
+                <td class="border border-red-700 p-2">${products[i].limit_date}</td>
+                <td class="border border-red-700 p-2">
+                    <button onclick="goToEdit(${i})"
+                       class="bg-blue-500 text-white p-2 px-3 rounded-lg">${[[${languagePack.get('수정')}]]}</button>
+                </td>
+                <td class="border border-red-700 p-2">
+                    <button class="bg-red-500 text-white p-2 px-3 rounded-lg" onclick="removeItem(${i})">${[[${languagePack.get('삭제')}]]}</button>
+                </td>`;
+            tbody.appendChild(tr);
+        }
+        table.appendChild(tbody);
+        productDiv.innerHTML="";
+        productDiv.append(table);
+        document.getElementById("count").innerText=products.length;
+    }
+    const newItem = () => {
+        console.log("요청: ",`/new`);
+        const name = document.getElementById("newItemName").value;
+        const price = document.getElementById("newItemPrice").value;
+        const limit_date = document.getElementById("newItemLimitDate").value;
+        fetch("/new", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({name,price,limit_date})
+        }).then(res=>res.json()).then(json=>{
+            console.log("응답: ",json);
+            if(json.status === 'ok')
+                alert([[${languagePack.get('상품이 추가되었습니다.')}]]);
+            else
+                alert([[${languagePack.get('오류가 발생했습니다.')}]]);
+            fetchProducts();
+            goToMain();
+        });
+    }
+    const editItem = () => {
+        const name = document.getElementById("editItemName").value;
+        const price = document.getElementById("editItemPrice").value;
+        const limit_date = document.getElementById("editItemLimitDate").value;
+        const index = document.getElementById("editItemIndex").value;
+
+        console.log("요청: ",`/edit`);
+        fetch("/edit", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({name,price,limit_date,index})
+        }).then(res=>res.json()).then(json=>{
+            console.log("응답: ",json);
+            if(json.status === 'ok')
+                alert([[${languagePack.get('상품이 수정되었습니다.')}]]);
+            else
+                alert([[${languagePack.get('오류가 발생했습니다.')}]]);
+            fetchProducts();
+            goToMain();
+        });
+    }
+    const removeItem = (id) => {
+        console.log("요청: ",`/remove?index=${id}`);
+        fetch(`/remove?index=${id}`).then(res=>res.json()).then(json=>{
+            console.log("응답: ",json);
+            if(json.status === 'ok')
+                alert([[${languagePack.get('상품이 삭제되었습니다.')}]]);
+            else
+                alert([[${languagePack.get('오류가 발생했습니다.')}]]);
+            fetchProducts();
+        });
+    }
+</script>
+</html>
