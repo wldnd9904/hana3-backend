@@ -37,7 +37,6 @@
 
     <!-- 상품 목록-->
     <div id="productDiv" class="bg-white text-center text-black p-1">
-        <h1 th:text="${languagePack.get('상품 목록이 비어있습니다.')}">상품 목록이 비어있습니다.</h1>
     </div>
     <div class="flex flex-row">
         <div class="w-7/12"></div>
@@ -147,10 +146,16 @@
         fetch('/products').then(res=>res.json()).then(json=>{
             console.log("응답: ",json)
             applyProducts(json);
+
         });
     }
     const applyProducts = (products) => {
         const productDiv = document.getElementById("productDiv");
+        if(products.length === 0) {
+            productDiv.innerHTML = [[|<h1 >${languagePack.get('상품 목록이 비어있습니다.')}</h1>|]];
+            document.getElementById("count").innerText=products.length;
+            return;
+        }
         const table = document.createElement("table");
         table.className = "border border-red-700 w-full";
         const thead = document.createElement("thead");
