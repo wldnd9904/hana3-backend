@@ -20,7 +20,7 @@
         <div class="flex w-7/12 flex-row justify-center items-center">
             한글
             <a href="/changeLocale"
-               th:class="|border border-white border-2 rounded-full w-8 h-4 box-content mx-2 #{language.toggle}|"
+               th:class="|border border-white border-2 rounded-full w-8 h-4 box-content mx-2 ${#locale.language == 'en' ? 'text-right':'text-left'}|"
             >
                 <span class="relative -top-1"> ● </span>
             </a>
