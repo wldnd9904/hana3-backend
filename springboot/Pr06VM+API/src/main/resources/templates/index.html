@@ -8,7 +8,7 @@
 </head>
 <body onload="fetchProducts()">
 <!--메인화면-->
-<div id="main" class="flex flex-col bg-red-700 p-2 gap-2 text-white font-bold">
+<div id="main" class="flex flex-col bg-red-700 p-2 gap-2 text-white font-bold max-w-screen-md md:mt-3 md:rounded-lg mx-auto">
     <!-- 상단부 -->
     <h1 th:text="${languagePack.get('★자판기 프로그램★')}" class="bg-white text-center rounded-t-lg text-red-700">
         ★자판기 프로그램★
@@ -56,9 +56,7 @@
     <h1 th:text="${languagePack.get('자판기 상품 수정')}" class="text-center text-white">
         자판기 상품 수정
     </h1>
-    <form class="flex flex-col gap-2"
-          th:action="|/${languagePack.get('lang')}/edit|"
-          method="post">
+    <form class="flex flex-col gap-2">
         <label>
             <span th:text="${languagePack.get('상품명:')}">상품명:</span>
             <input class="w-full rounded p-0.5 text-black" id="editItemName" name="name" type="text"
@@ -88,9 +86,7 @@
     <h1 th:text="${languagePack.get('자판기 상품 추가')}" class="text-center text-white">
         자판기 상품 추가
     </h1>
-    <form class="flex flex-col gap-2"
-          th:action="|/${languagePack.get('lang')}/new|"
-          method="post">
+    <form class="flex flex-col gap-2">
         <label>
             <span th:text="|${languagePack.get('상품명')}:|">상품명:</span>
             <input class="w-full rounded p-0.5 text-black" id="newItemName" name="name" type="text" required/>
@@ -123,8 +119,8 @@
         document.getElementById("main").style.display = "none";
         document.getElementById("new").style.display = "none";
         document.getElementById("edit").style.display = "";
-        console.log("요청: ",`/get?index=${index}`);
-        fetch(`/get?index=${index}`).then(res=>res.json()).then(product=> {
+        console.log("요청: ",`/api/get?index=${index}`);
+        fetch(`/api/get?index=${index}`).then(res=>res.json()).then(product=> {
             console.log("응답: ",product);
             document.getElementById("editItemName").value = `${product.name}`;
             document.getElementById("editItemPrice").value = `${product.price}`;
@@ -141,9 +137,9 @@
         document.getElementById("newItemLimitDate").value = "";
     }
     const fetchProducts = () => {
-        console.log("요청: ",`/products`);
+        console.log("요청: ",`/api/products`);
         //상품 가져오기
-        fetch('/products').then(res=>res.json()).then(json=>{
+        fetch('/api/products').then(res=>res.json()).then(json=>{
             console.log("응답: ",json)
             applyProducts(json);
 
@@ -194,11 +190,11 @@
         document.getElementById("count").innerText=products.length;
     }
     const newItem = () => {
-        console.log("요청: ",`/new`);
+        console.log("요청: ",`/api/new`);
         const name = document.getElementById("newItemName").value;
         const price = document.getElementById("newItemPrice").value;
         const limit_date = document.getElementById("newItemLimitDate").value;
-        fetch("/new", {
+        fetch("/api/new", {
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({name,price,limit_date})
@@ -218,8 +214,8 @@
         const limit_date = document.getElementById("editItemLimitDate").value;
         const index = document.getElementById("editItemIndex").value;
 
-        console.log("요청: ",`/edit`);
-        fetch("/edit", {
+        console.log("요청: ",`/api/edit`);
+        fetch("/api/edit", {
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({name,price,limit_date,index})
@@ -234,8 +230,10 @@
         });
     }
     const removeItem = (id) => {
-        console.log("요청: ",`/remove?index=${id}`);
-        fetch(`/remove?index=${id}`).then(res=>res.json()).then(json=>{
+        console.log("요청: ",`/api/remove?index=${id}`);
+        fetch(`/api/remove?index=${id}`, {
+            method:"DELETE"
+        }).then(res=>res.json()).then(json=>{
             console.log("응답: ",json);
             if(json.status === 'ok')
                 alert([[${languagePack.get('상품이 삭제되었습니다.')}]]);

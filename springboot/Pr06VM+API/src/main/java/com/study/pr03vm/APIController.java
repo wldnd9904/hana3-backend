@@ -7,10 +7,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 @RestController
+@RequestMapping("/api")
 public class APIController {
     ArrayList<Product> products;
 
-    APIController(){
+    APIController() {
         products = new ArrayList<>();
         products.add(new Product("상추버거", 3000, LocalDate.of(2024, 3, 30)));
         products.add(new Product("소고기버거", 1000, LocalDate.of(2024, 3, 26)));
@@ -30,18 +31,18 @@ public class APIController {
     @PostMapping("/new")
     public Result newItem(@RequestBody Product product) {
         products.add(product);
-        return new Result("ok","");
+        return new Result("ok", "");
     }
 
     @PostMapping("/edit")
     public Result edit(@RequestBody ProductWithIndex productWithIndex) {
         products.set(productWithIndex.getIndex(), productWithIndex);
-        return new Result("ok","");
+        return new Result("ok", "");
     }
 
-    @GetMapping("/remove")
+    @DeleteMapping("/remove")
     public Result remove(@RequestParam int index) {
         products.remove(index);
-        return new Result("ok","");
+        return new Result("ok", "");
     }
 }
