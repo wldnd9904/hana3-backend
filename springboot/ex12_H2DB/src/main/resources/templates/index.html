@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        tbody tr:nth-child(2n+1) {
+            background-color: lightgray;
+        }
+
+    </style>
+</head>
+<body class="p-1">
+<h2>회원목록</h2>
+<table class="border border-black p-1">
+    <thead>
+    <tr>
+        <th class="border border-black p-1">ID</th>
+        <th class="border border-black p-1">USER_ID</th>
+        <th class="border border-black p-1">USER_NAME</th>
+        <th class="border border-black p-1">USER_PW</th>
+        <th class="border border-black p-1">USER_ROLE</th>
+        <th class="border border-black p-1">JOINDATE</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member, status: ${list}">
+        <td class="border border-black p-1" th:text="${member.getId()}"></td>
+        <td class="border border-black p-1" th:text="${member.getUser_id()}"></td>
+        <td class="border border-black p-1" th:text="${member.getUser_name()}"></td>
+        <td class="border border-black p-1" th:text="${member.getUser_pw()}"></td>
+        <td class="border border-black p-1" th:text="${member.getUser_role()}"></td>
+        <td class="border border-black p-1" th:text="${member.getJoindate()}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
