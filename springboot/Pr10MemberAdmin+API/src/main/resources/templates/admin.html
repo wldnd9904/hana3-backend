@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html
+        lang="ko"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <title>관리자 페이지</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+            crossorigin="anonymous"
+    />
+</head>
+<body onload="getMembers();">
+<!-- 어드민 페이지 -->
+<div
+        class="container-fluid p-4"
+        style="background-color: #eee"
+>
+    <div class="row">
+        <div
+                class="container-fluid"
+                style="
+            background-color: white;
+            max-width: 1200px;
+            border-radius: 20px;
+          "
+        >
+            <h1 class="my-5 text-center">관리자페이지 - 회원목록</h1>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>아이디</th>
+                    <th>암호</th>
+                    <th>이메일</th>
+                    <th>가입일</th>
+                    <th class="text-center">수정</th>
+                    <th class="text-center">삭제</th>
+                </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+
+            <div class="text-center my-5">
+                <a
+                        href="/"
+                        class="btn btn-danger"
+                        role="button"
+                >메인으로</a
+                >
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 수정 모달 -->
+<div class="modal fade" id="updateModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="updateModalLabel">회원정보 수정</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- 입력폼 -->
+                <form
+                        name="formUpdate"
+                        action="/update-action"
+                        method="post"
+                >
+                    <div class="col-12 col-lg-6 order-2 order-lg-1">
+                        <div class="mb-3 d-flex flex-row">
+                            <div
+                                    class="d-flex me-2 justify-content-center align-items-center"
+                            >
+                                <i class="fa-solid fa-user fa-xl"></i>
+                            </div>
+                            <input
+                                    required
+                                    type="text"
+                                    class="form-control"
+                                    id="username"
+                                    name="username"
+                                    placeholder="Your Name"
+                            />
+                        </div>
+
+                        <div class="mb-3 d-flex flex-row">
+                            <div
+                                    class="d-flex me-2 justify-content-center align-items-center"
+                            >
+                                <i class="fa-solid fa-lock fa-xl"></i>
+                            </div>
+                            <input
+                                    required
+                                    type="text"
+                                    class="form-control"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Your Password"
+                            />
+                        </div>
+
+                        <div class="mb-3 d-flex flex-row">
+                            <div
+                                    class="d-flex me-2 justify-content-center align-items-center"
+                            >
+                                <i class="fa-solid fa-envelope fa-xl"></i>
+                            </div>
+                            <input
+                                    required
+                                    type="email"
+                                    class="form-control"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Your Email"
+                            />
+                        </div>
+
+                        <div class="mb-3 d-flex flex-row">
+                            <div
+                                    class="d-flex me-2 justify-content-center align-items-center"
+                            >
+                                <i class="fa-solid fa-calendar fa-xl"></i>
+                            </div>
+                            <input
+                                    required
+                                    type="date"
+                                    class="form-control"
+                                    id="joindate"
+                                    name="joindate"
+                                    placeholder="Join Date"
+                            />
+                        </div>
+
+                        <input
+                                required
+                                type="hidden"
+                                id="index"
+                                name="index"
+                        />
+                        <div class="text-center">
+                            <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    onclick="updateUser()"
+                            >
+                                수정
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn btn-danger"
+                                    data-bs-dismiss="modal"
+                            >
+                                취소
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script>
+    const openUpdateModal = (index) => {
+        fetch(`/api/get?index=${index}`).then(res => res.json()).then(json => {
+            const updateModal = new bootstrap.Modal(document.getElementById("updateModal"));
+            const username = document.getElementById("username");
+            const password = document.getElementById("password");
+            const email = document.getElementById("email");
+            const joinDate = document.getElementById("joindate");
+            const inputIndex = document.getElementById("index");
+            username.value = json.username;
+            password.value = json.password;
+            email.value = json.email;
+            joinDate.value = json.joinDate;
+            inputIndex.value = index;
+            updateModal.show();
+        });
+    }
+    const getMembers = () => {
+        fetch("/api/members").then(ret => ret.json()).then(memberList => {
+            const tbody = document.getElementById("tbody");
+            let html = "";
+            for (member of memberList) {
+                const tr = `
+                    <tr>
+                     <td>${memberList.indexOf(member)}</td>
+                     <td>${member.username}</td>
+                     <td>${member.password}</td>
+                     <td>${member.email}</td>
+                     <td>${member.joinDate}</td>
+                     <td class="text-center">
+                         <button type="button" onclick="openUpdateModal(${memberList.indexOf(member)});"
+                             class="btn btn-primary" role="button">수정</button>
+                     </td>
+                     <td class="text-center">
+                         <button type="button" onclick="deleteUser(${memberList.indexOf(member)});"
+                             class="btn btn-danger" role="button">삭제</button>
+                     </td>
+                    </tr> `;
+                html += tr;
+            }
+            tbody.innerHTML = html;
+        })
+    }
+    const deleteUser = (index) => {
+        fetch(`/api/delete?index=${index}`, {method: 'DELETE'}).then(ret => ret.json()).then(json => {
+            alert(json.message);
+            getMembers();
+        })
+    }
+    const updateUser = () => {
+        if (!checkForm()) return;
+        const updateModal = bootstrap.Modal.getInstance(document.getElementById("updateModal"));
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const email = document.getElementById("email").value;
+        const joinDate = document.getElementById("joindate").value;
+        const index = document.getElementById("index").value;
+        fetch(`/api/update`, {
+            method: 'POST',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                username, password, email, joinDate, index
+            })
+        }).then(ret => ret.json()).then(json => {
+            alert(json.message);
+            getMembers();
+            updateModal.hide();
+        })
+    }
+    const checkForm = () => {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const email = document.getElementById("email").value;
+        const joinDate = document.getElementById("joindate").value;
+        for (const [input, label] of [[username, "아이디를"], [email, "이메일을"], [password, "비밀번호를"], [joinDate, "가입일을"],]) {
+            if (input === "") {
+                alert(`${label} 입력해 주세요.`);
+                return false;
+            }
+        }
+        return true;
+    }
+</script>
+</body>
+</html>
