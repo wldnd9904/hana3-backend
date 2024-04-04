@@ -5,15 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import java.lang.reflect.Array;
-import java.lang.reflect.Member;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,12 +103,12 @@ public class MemberRepositoryTest extends Ex12H2DbApplicationTests {
     }
 
     @Test
-    @Transactional
     @DisplayName("찾아서 바꾸기 테스트")
     void update() {
         Optional<MemberEntity> member = memberRepository.findById(1L);
         member.ifPresentOrElse((memberFound)->{
             memberFound.update("admin","admin","어드민","ADMIN");
+            memberRepository.save(memberFound);
             List<MemberEntity> list = memberRepository.findAll();
             for(MemberEntity entry: list)
                 System.out.println(entry.getUserName());

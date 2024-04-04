@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>회원목록 조회</title>
+</head>
+<body>
+<h2>회원목록</h2>
+<table class="border border-black p-1">
+    <thead>
+    <tr>
+        <th class="border border-black p-1">ID</th>
+        <th class="border border-black p-1">USER_ID</th>
+        <th class="border border-black p-1">USER_NAME</th>
+        <th class="border border-black p-1">USER_PW</th>
+        <th class="border border-black p-1">USER_ROLE</th>
+        <th class="border border-black p-1">JOINDATE</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member, status: ${list}">
+        <td class="border border-black p-1" th:text="${member.getId()}"></td>
+        <td class="border border-black p-1" th:text="${member.getUserId()}"></td>
+        <td class="border border-black p-1" th:text="${member.getUserName()}"></td>
+        <td class="border border-black p-1" th:text="${member.getUserPw()}"></td>
+        <td class="border border-black p-1" th:text="${member.getUserRole()}"></td>
+        <td class="border border-black p-1" th:text="${member.getJoinDate()}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
