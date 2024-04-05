@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>질문상세</title>
+    <link th:href="@{/css/output.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- 네비게이션바 -->
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
+<div class="flex flex-row justify-between align-center m-2">
+    <h1 class=" font-bold text-xl" th:text="${question.subject}"></h1>
+    <span>
+            <span class="fw-bold" th:if="${question.author != null}" th:text="${question.author.username}"></span>
+        <span th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+        <span th:if="${question.modifyDate != null}"
+              th:text="|(${#temporals.format(question.modifyDate, 'yyyy-MM-dd HH:mm')} 수정됨)|"></span>
+    </span>
+</div>
+<a href="javascript:void(0);" class="recommend text-pink-500"
+   th:data-uri="@{|/question/vote/${question.id}|}">
+    추천
+    <span class="text-pink-700" th:text="${#lists.size(question.voter)}"></span>
+</a>
+<a th:href="@{|/question/modify/${question.id}|}"
+   sec:authorize="isAuthenticated()"
+   th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+   th:text="수정" class="border border-gray-500 rounded m-2 p-1"></a>
+<a href="javascript:void(0);" th:data-uri="@{|/question/delete/${question.id}|}"
+   class="delete border border-gray-500 rounded m-2 p-1" sec:authorize="isAuthenticated()"
+   th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+   th:text="삭제"></a>
+<div class="border border-gray-500 rounded m-1 p-3" th:text="${question.content}"></div>
+<h5 class="m-2 text-lg" th:text="|${question.answerList.size()}개의 답변이 있습니다.|"></h5>
+<div>
+    <ul>
+        <li th:each="answer : ${question.answerList}"
+            class="flex flex-row justify-between border border-gray-500 rounded m-1 p-3">
+
+            <span th:text="${answer.content}"></span>
+            <a th:id="|answer_${answer.id}|"></a>
+
+
+            <div class="flex flex-col text-right">
+                <span class="fw-bold" th:if="${answer.author != null}" th:text="${question.author.username}"></span>
+                <span th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}">
+                    </span>
+                <span th:if="${answer.modifyDate != null}"
+                      th:text="|(${#temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm')} 수정됨)|"></span>
+                <div class="my-3">
+                    <a href="javascript:void(0);" class="recommend text-pink-500"
+                       th:data-uri="@{|/answer/vote/${answer.id}|}">
+                        추천
+                        <span class="text-pink-700" th:text="${#lists.size(answer.voter)}"></span>
+                    </a>
+                    <a th:href="@{|/answer/modify/${answer.id}|}" class="text-blue-500"
+                       sec:authorize="isAuthenticated()"
+                       th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+                       th:text="수정"></a>
+                    <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
+                       class="delete text-red-500" sec:authorize="isAuthenticated()"
+                       th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+                       th:text="삭제"></a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<form th:action="|/answer/create/${question.id}|" th:object="${answerForm}" method="post">
+    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+    <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" id="content"
+              class="m-1 border border-gray-500 w-full bg-red-100"
+              rows="3"></textarea>
+    <textarea sec:authorize="isAuthenticated()" th:field="*{content}" id="content"
+              class="m-1 border border-gray-500 w-full bg-red-100"
+              rows="3"></textarea>
+    <input type="submit" value="답변등록" class="border border-gray-500 rounded m-1 p-1">
+    <input type="button" value="뒤로가기" onclick="location.href='/'" class="border border-gray-500 rounded m-1 p-1">
+</form>
+
+</body>
+
+<script type='text/javascript'>
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            }
+            ;
+        });
+    });
+    const recommend_elements = document.getElementsByClassName("recommend");
+    Array.from(recommend_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            if (confirm("정말로 추천하시겠습니까?")) {
+                location.href = this.dataset.uri;
+            }
+            ;
+        });
+    });
+
+</script>
+
+</html>

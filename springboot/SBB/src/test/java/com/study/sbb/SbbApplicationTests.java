@@ -1,30 +1,49 @@
 package com.study.sbb;
 
-import com.study.sbb.model.Question;
-import com.study.sbb.model.QuestionRepository;
+import com.study.sbb.answer.Answer;
+import com.study.sbb.answer.AnswerRepository;
+import com.study.sbb.question.Question;
+import com.study.sbb.question.QuestionRepository;
+import com.study.sbb.question.QuestionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest
 class SbbApplicationTests {
 
     @Autowired
-    private QuestionRepository questionRepository;
+    private QuestionService questionService;
 
+    @Autowired
+    private AnswerRepository answerRepository;
+
+    @Transactional
     @Test
     void testJpa() {
-        Question q = this.questionRepository.findBySubject("sbb가 무엇인가요?");
-        assertEquals(1, q.getId());
+        Question q = questionService.getQuestion(2);
+
+        List<Answer> answerList = q.getAnswerList();
+
+        assertEquals(1, answerList.size());
+        assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+    }
+
+    @Test
+    void generateQuestions() {
+        for (int i = 1; i <= 300; i++) {
+            String subject = String.format("테스트 데이터입니다:[%03d]", i);
+            String content = "내용무";
+            this.questionService.create(subject, content);
+        }
     }
 }

@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build": "echo '테일윈드 빌드'; tailwindcss -i ./main.css -o ./css/output.css"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.3"
+  }
+}

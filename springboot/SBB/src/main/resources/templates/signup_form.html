@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <link th:href="@{/css/output.css}" rel="stylesheet"/>
+    <style>
+
+        .border border-gray-500 rounded m-1 p-1 w-full {
+            border: 1px solid gray;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+<!-- 네비게이션바 -->
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
+<div class="my-3 border-bottom">
+    <div>
+        <h4 class="border-b border-gray-500 text-2xl m-1 p-1">회원가입</h4>
+    </div>
+</div>
+<form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post"
+      class="flex flex-col">
+    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+    <div class="mb-3">
+        <label for="username" class="mx-2 w-full">사용자ID</label>
+        <input type="text" th:field="*{username}" class="border border-gray-500 rounded m-1 p-1 w-full">
+    </div>
+    <div class="mb-3">
+        <label for="password1" class="mx-2 w-full">비밀번호</label>
+        <input type="password" th:field="*{password1}" class="border border-gray-500 rounded m-1 p-1 w-full">
+    </div>
+    <div class="mb-3">
+        <label for="password2" class="mx-2 w-full">비밀번호 확인</label>
+        <input type="password" th:field="*{password2}" class="border border-gray-500 rounded m-1 p-1 w-full">
+    </div>
+    <div class="mb-3">
+        <label for="email" class="mx-2 w-full">이메일</label>
+        <input type="email" th:field="*{email}" class="border border-gray-500 rounded m-1 p-1 w-full">
+    </div>
+    <input type="submit" value="회원가입" class="border border-gray-500 rounded m-1 p-1"/>
+</form>
+
+</body>
+</html>

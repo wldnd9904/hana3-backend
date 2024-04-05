@@ -1,8 +1,11 @@
-package com.study.sbb.model;
+package com.study.sbb.question;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
+import com.study.sbb.answer.Answer;
+import com.study.sbb.user.SiteUser;
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -26,4 +29,11 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
+    @ManyToOne
+    private SiteUser author;
+
+    private LocalDateTime modifyDate;
+    @ManyToMany
+    Set<SiteUser> voter;
 }

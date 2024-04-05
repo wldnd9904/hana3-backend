@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/output.css}" rel="stylesheet"/>
+    <title>질문 등록</title>
+</head>
+<body>
+<!-- 네비게이션바 -->
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
+<h5 class="border-b border-gray-500 text-2xl m-1 p-1">질문등록</h5>
+<form th:object="${questionForm}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+    <div class=" mb-3">
+        <label for="subject" class="mx-2 w-full">제목</label>
+        <input th:field="*{subject}" name="subject" id="subject"
+               class="border border-gray-500 rounded m-1 p-1 w-full">
+    </div>
+    <div class="mb-3">
+        <label for="content" class="mx-2 w-full">내용</label>
+        <textarea th:field="*{content}" id="content"
+                  class="border border-gray-500 rounded m-1 p-1 w-full"
+                  rows="10"></textarea>
+    </div>
+    <input type="submit" value="저장하기" class="border border-gray-500 rounded m-1 p-1"/>
+    <input type="reset" value="초기화" class="border border-gray-500 rounded m-1 p-1"/>
+    <input type="button" value="뒤로가기" onclick="location.href='/'" class="border border-gray-500 rounded m-1 p-1">
+</form>
+</body>
+</html>
