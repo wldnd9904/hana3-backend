@@ -42,7 +42,7 @@
 
 
             <div class="flex flex-col text-right">
-                <span class="fw-bold" th:if="${answer.author != null}" th:text="${question.author.username}"></span>
+                <span class="fw-bold" th:if="${answer.author != null}" th:text="${answer.author.username}"></span>
                 <span th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}">
                     </span>
                 <span th:if="${answer.modifyDate != null}"
