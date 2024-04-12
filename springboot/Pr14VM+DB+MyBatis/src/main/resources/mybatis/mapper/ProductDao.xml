@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.pr03vm.IProductDao">
+    <select id="list" resultType="com.study.pr03vm.ProductDto">
+        SELECT id,
+               name,
+               price,
+               limit_date limitDate
+        FROM product
+    </select>
+    <select id="count" resultType="_int">
+        SELECT COUNT(*)
+        FROM product
+    </select>
+    <select id="findById" parameterType="map" resultType="com.study.pr03vm.ProductDto">
+        SELECT *
+        FROM product
+        WHERE id = #{id}
+    </select>
+    <insert id="update" parameterType="com.study.pr03vm.ProductDto">
+        UPDATE product
+        SET name=#{name},
+            price=#{price},
+            limit_date=#{limitDate}
+
+        WHERE id = #{id}
+    </insert>
+    <insert id="insert" parameterType="com.study.pr03vm.ProductDto">
+        INSERT INTO product(id, name, price, limit_date)
+        VALUES (0, #{name}, #{price}, #{limitDate})
+    </insert>
+    <delete id="deleteById" parameterType="map">
+        DELETE
+        FROM product
+        WHERE id = #{id}
+    </delete>
+</mapper>
