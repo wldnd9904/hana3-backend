@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.ex14_readdb.dao.IMemberDao">
+    <select id="list" resultType="com.study.ex14_readdb.dto.MemberDto">
+        SELECT id,
+               user_id   as userId,
+               user_pw   as userPw,
+               user_name as userName,
+               user_role as userRole,
+               join_date as joinDate
+        FROM member
+    </select>
+    <select id="count" resultType="_int">
+        SELECT COUNT(*)
+        FROM member
+    </select>
+    <select id="getById" parameterType="map" resultType="com.study.ex14_readdb.dto.MemberDto">
+        SELECT id,
+               user_id   as userId,
+               user_pw   as userPw,
+               user_name as userName,
+               user_role as userRole,
+               join_date as joinDate
+        FROM member
+        WHERE id = #{id}
+    </select>
+    <insert id="update" parameterType="com.study.ex14_readdb.dto.MemberDto">
+        UPDATE member
+        SET user_id=#{userId},
+            user_pw=#{userPw},
+            user_name=#{userName},
+            user_role=#{userRole},
+            join_date=#{joinDate}
+        WHERE id = #{id}
+    </insert>
+    <insert id="insert" parameterType="com.study.ex14_readdb.dto.MemberDto">
+        INSERT INTO member(id, user_id, user_pw, user_name, user_role, join_date)
+        VALUES (0, #{userId}, #{userPw}, #{userName}, #{userRole}, #{joinDate})
+    </insert>
+    <delete id="deleteById" parameterType="map">
+        DELETE
+        FROM MEMBER
+        WHERE id = #{id}
+    </delete>
+</mapper>

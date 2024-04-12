@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>회원목록 조회</title>
+</head>
+<body>
+
+
+<h2>회원목록 (총 <span th:text="${count}"></span>명)</h2>
+<table class="border border-black p-1">
+    <thead>
+    <tr>
+        <th class="border border-black p-1">ID</th>
+        <th class="border border-black p-1">USER_ID</th>
+        <th class="border border-black p-1">USER_NAME</th>
+        <th class="border border-black p-1">USER_PW</th>
+        <th class="border border-black p-1">USER_ROLE</th>
+        <th class="border border-black p-1">JOINDATE</th>
+        <th class="border border-black p-1">단건조회</th>
+        <th class="border border-black p-1">삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member, status: ${list}">
+        <td class="border border-black p-1" th:text="${member.id()}"></td>
+        <td class="border border-black p-1" th:text="${member.userId()}"></td>
+        <td class="border border-black p-1" th:text="${member.userName()}"></td>
+        <td class="border border-black p-1" th:text="${member.userPw()}"></td>
+        <td class="border border-black p-1" th:text="${member.userRole()}"></td>
+        <td class="border border-black p-1" th:text="${member.joinDate()}"></td>
+        <td class="border border-black p-1">
+            <button type="button" th:onclick="|location.href='@{/viewMember(id=${member.id})}'|"> 단건조회</button>
+        </td>
+        <td class="border border-black p-1">
+            <button type="button" th:onclick="|location.href='/deleteDTO?id=${member.id}'|"> 삭제</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="/joinForm">회원가입</a>
+</body>
+</html>
