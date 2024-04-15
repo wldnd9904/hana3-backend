@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${content.boardTitle}">글 보기</title>
+    <style>
+        * {
+            margin: 0 auto;
+            padding: 0 auto;
+            font-family: sans-serif;
+        }
+
+        td, h2 {
+            text-align: center;
+        }
+
+        th, tr, td {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 500px;
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        input, textarea {
+            width: 100%;
+            height: 100%;
+            background: none;
+            box-sizing: border-box;
+            border: none;
+            font-size: inherit;
+        }
+
+        .shrink {
+            width: fit-content;
+        }
+    </style>
+</head>
+<body>
+<h2>게시판 글 목록</h2>
+<form th:action="|/board/updateAction?id=${content.boardIdx()}|" method="post">
+    <!--    <input type="hidden" name="boardIdx" th:value="${content.boardIdx}"/>-->
+    <table>
+        <tbody>
+        <tr>
+            <td>이름</td>
+            <td><input type="text" name="boardName" th:value="${content.boardName}"></td>
+        </tr>
+        <tr>
+            <td>제목</td>
+            <td><input type="text" name="boardTitle" th:value="${content.boardTitle}"></td>
+        </tr>
+        <tr>
+            <td>조회수</td>
+            <td th:text="${content.boardHit()}"></td>
+        </tr>
+        <tr>
+            <td>내용</td>
+            <td><textarea name="boardContent" th:text="${content.boardContent}"></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input class="shrink" type="submit" value="수정"/>
+                <a href="/board/listForm"><input class="shrink" type="button" value="목록보기"></a>
+                <a th:href="|/board/deleteAction?id=${content.boardIdx}|"><input class="shrink" type="button"
+                                                                                 value=삭제하기></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+</body>
+</html>
