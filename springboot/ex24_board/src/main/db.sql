@@ -27,7 +27,7 @@ CREATE TABLE reply(
                       reply_name      VARCHAR(255),
                       reply_content   VARCHAR(255),
                       reply_date      DATETIME DEFAULT NOW(),
-                      reply_board_idx BIGINT NOT NULL
+                      reply_board_idx BIGINT NOT NULL REFERENCES board(board_idx)
 );
 
 INSERT INTO reply VALUES (0, '홍두깨', '댓글 제목1', DEFAULT, 1);

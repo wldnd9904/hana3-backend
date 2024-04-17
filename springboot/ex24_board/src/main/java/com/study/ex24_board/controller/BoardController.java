@@ -46,7 +46,7 @@ public class BoardController {
         long newIdx = boardService.save(dto);
         boolean isFound = boardService.existById(newIdx);
         if (isFound)
-            return "<script>alert('게시글이 작성되었습니다.');location.href='listForm'</script>";
+            return String.format("<script>alert('게시글이 작성되었습니다.');location.href='content/%d'</script>", newIdx);
         else
             return "<script>alert('글쓰기 실패');history.back();</script>";
     }
@@ -69,6 +69,6 @@ public class BoardController {
         } catch (Exception e) {
             return "<script>alert('수정 실패');history.back();</script>";
         }
-        return "<script>alert('게시글이 수정되었습니다.');location.href='listForm'</script>";
+        return "<script>alert('게시글이 수정되었습니다.');history.back();</script>";
     }
 }

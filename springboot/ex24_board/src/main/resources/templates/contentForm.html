@@ -36,10 +36,28 @@
             box-sizing: border-box;
             border: none;
             font-size: inherit;
+            padding: 0 0.5rem;
         }
 
         .shrink {
             width: fit-content;
+            margin: 0 0.5rem;
+            padding: 0;
+        }
+
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .justify {
+            text-align: left;
+            padding: 1rem;
         }
     </style>
 </head>
@@ -51,15 +69,15 @@
         <tbody>
         <tr>
             <td>이름</td>
-            <td><input type="text" name="boardName" th:value="${content.boardName}"></td>
+            <td><input class="center" type="text" name="boardName" th:value="${content.boardName}"></td>
         </tr>
         <tr>
             <td>제목</td>
-            <td><input type="text" name="boardTitle" th:value="${content.boardTitle}"></td>
+            <td><input class="center" type="text" name="boardTitle" th:value="${content.boardTitle}"></td>
         </tr>
         <tr>
             <td>조회수</td>
-            <td th:text="${content.boardHit()}"></td>
+            <td th:text="${content.boardHit()+1}"></td>
         </tr>
         <tr>
             <td>내용</td>
@@ -76,6 +94,62 @@
         </tbody>
     </table>
 </form>
+<!-- 댓글 -->
+<br>
+
+<table>
+    <thead>
+    <tr>
+        <th>별명</th>
+        <th>내용</th>
+        <th>날짜</th>
+        <th>삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${content.replyList().size()==0}">
+        <td colspan="4">
+            댓글이 없습니다.
+        </td>
+    </tr>
+    <tr th:each="reply: ${content.replyList()}">
+        <td th:text="${reply.replyName}"></td>
+        <td class="justify" th:text="${reply.replyContent}"></td>
+        <td>
+            <span th:text="${#temporals.format(reply.replyDate,'yyyy-MM-dd')}"></span>
+            <br/>
+            <span th:text="${#temporals.format(reply.replyDate,'HH:mm')}"></span>
+        </td>
+        <td><a th:href="|/reply/deleteAction?id=${reply.replyIdx}|">삭제</a></td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<form th:action="|/reply/writeReplyAction?replyBoardIdx=${content.boardIdx()}|" method="post">
+    <input type="hidden" name="replyBoardIdx" th:value="${content.boardIdx()}"/>
+    <table>
+        <tr>
+            <td class="col-left">
+                <div class="flex-row">
+                    별명
+                    <input class="shrink" type="text" name="replyName" value="ㅇㅇ"/>
+                </div>
+                <textarea name="replyContent" cols="50" rows="2"></textarea>
+            </td>
+            <td>
+                <input type="submit" value="댓글 작성"/>
+            </td>
+        </tr>
+    </table>
+</form>
+<script>
+    /* 웹브라우저 back키 누를때, 페이지 재로딩 => 조회수 증가  */
+    window.onpageshow = function (event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+            document.location.reload();
+        }
+    }
+</script>
 
 </body>
 </html>

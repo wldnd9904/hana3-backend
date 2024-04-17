@@ -1,10 +1,11 @@
 package com.study.ex24_board.domain.board;
 
+import com.study.ex24_board.domain.reply.Reply;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -17,7 +18,7 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_idx", nullable = false)
-    private long boardIdx;
+    private Long boardIdx;
 
     @Column(name = "board_name", nullable = false)
     private String boardName;
@@ -34,6 +35,9 @@ public class Board {
     @Column(name = "board_date", nullable = false)
     private LocalDateTime boardDate;
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
+    private List<Reply> replyList;
+
     //매개변수 있는 생성자
     public Board(String boardName, String boardTitle, String boardContent, int boardHit) {
         this.boardName = boardName;
@@ -41,6 +45,11 @@ public class Board {
         this.boardContent = boardContent;
         this.boardHit = boardHit;
         this.boardDate = LocalDateTime.now();
+    }
+
+    public void addReply(Reply reply) {
+        replyList.add(reply);
+        reply.setBoard(this);
     }
 
     public void update(String boardName, String boardTitle,

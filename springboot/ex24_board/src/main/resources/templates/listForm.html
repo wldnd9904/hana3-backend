@@ -47,7 +47,9 @@
     <tr th:each="dto, status: ${list}">
         <td th:text="${status.count}">1</td>
         <td th:text="${dto.boardName}">홍길동</td>
-        <td><a th:href="|/board/content/${dto.boardIdx()}|" th:text="${dto.boardTitle}">게시글내용</td>
+        <td><a th:href="|/board/content/${dto.boardIdx()}|"
+               th:text="|${dto.boardTitle} ${dto.replyList().size()>0 ? '['+dto.replyList().size()+']': ''}|">게시글내용</a>
+        </td>
         <td th:text="${#temporals.format(dto.boardDate,'yyyy-MM-dd HH:mm')}">2024-04-15 10:10</td>
         <td th:text="${dto.boardHit}">10</td>
     </tr>
@@ -58,8 +60,8 @@
 </table>
 <script>
     /* 웹브라우저 back키 누를때, 페이지 재로딩 => 조회수 증가  */
-    window.onpageshow = function(event) {
-        if ( event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+    window.onpageshow = function (event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
             document.location.reload();
         }
     }

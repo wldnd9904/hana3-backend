@@ -10,5 +10,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //findAll, findById, save, delete
     @Modifying
     @Query(value = "update Board b set b.boardHit = b.boardHit + 1 where b.boardIdx=:id")
-    void hitById(long id);
+    void hitById(Long id);
 }
