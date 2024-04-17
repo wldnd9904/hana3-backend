@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 목록보기</title>
+    <style>
+        * {
+            margin: 0 auto;
+            padding: 0 auto;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        td, h2 {
+            text-align: center;
+        }
+
+        th, tr, td {
+            border: 1px solid black;
+        }
+
+        table {
+            width: 500px;
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+<h2>게시판 글 목록</h2>
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>이름</th>
+        <th>제목</th>
+        <th>날짜시간</th>
+        <th>조회수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="dto, status: ${list}">
+        <td th:text="${status.count}">1</td>
+        <td th:text="${dto.boardName}">홍길동</td>
+        <td><a th:href="|/board/content/${dto.boardIdx()}|"
+               th:text="|${dto.boardTitle} ${dto.replyList().size()>0 ? '['+dto.replyList().size()+']': ''}|">게시글내용</a>
+        </td>
+        <td th:text="${#temporals.format(dto.boardDate,'yyyy-MM-dd HH:mm')}">2024-04-15 10:10</td>
+        <td th:text="${dto.boardHit}">10</td>
+    </tr>
+    <tr>
+        <td colspan="5"><a href="writeForm">글작성</a></td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    /* 웹브라우저 back키 누를때, 페이지 재로딩 => 조회수 증가  */
+    window.onpageshow = function (event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+            document.location.reload();
+        }
+    }
+</script>
+</body>
+</html>
