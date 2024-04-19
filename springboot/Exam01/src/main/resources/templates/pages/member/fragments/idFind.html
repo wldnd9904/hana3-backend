@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!-- footer -->
+<div th:fragment="idFindFragment">
+    <div class=" d-flex justify-content-center">
+        <div>
+            <table>
+                <tr>
+                    <td colspan="2">아이디 찾기</td>
+                </tr>
+                <tr>
+                    <td colspan="2">아이디를 잊어버리셨나요?<br>회원님의 성명과 이메일을 입력하여 주세요.</td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;">
+                        <img src="/img/member/txt_join1.gif">
+                        <img src="/img/member/txt_email.gif">
+                    </td>
+                    <td style="width: 80%;">
+                        <input type="text" id="userName">
+                        <input type="text" class="emailText" id="userEmail">
+                    </td>
+                </tr>
+            </table>
+            <div id="idFindMessage"></div>
+            <div><input type="image" src="/img/member/btn_confirm.gif" onclick="findId();"></div>
+        </div>
+    </div>
+    <script>
+        const findId = () => {
+            const userName = $("#userName")[0];
+            const userEmail = $("#userEmail")[0];
+            if (userName.value === "") {
+                alert("이름을 입력해 주세요.")
+                userName.focus();
+                return;
+            }
+            if (userEmail.value === "") {
+                alert("이메일을 입력해 주세요.")
+                userEmail.focus();
+                return;
+            }
+            fetch("/api/member/findId", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({userName: userName.value, userEmail: userEmail.value})
+            }).then(res => res.json()).then(json => {
+                $("#idFindMessage")[0].innerText = json.message;
+                $("#idFindMessage")[0].style.color = json.status;
+
+            });
+        }
+    </script>
+</div>
+</html>

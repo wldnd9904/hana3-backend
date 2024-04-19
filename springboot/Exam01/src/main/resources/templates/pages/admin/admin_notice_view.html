@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회사홈페이지</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" href="/css/main.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <!-- main.jsp, login.jsp, ... -->
+    <link rel="stylesheet" href="/css/admin/admin.css"/>
+
+    <!-- Bootstrap CSS -->
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+            integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
+            crossorigin="anonymous"
+    />
+    <!-- Bootstarp JS -->
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"
+    ></script>
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"
+    ></script>
+</head>
+
+<body>
+<!-- 탑메뉴 -->
+<!-- 헤더 -->
+<div th:replace="fragments/headerTop :: headerTopFragment" id="headerTop"></div>
+<header id="header" th:replace="fragments/header :: headerFragment" class="sticky-top"></header>
+
+<!-- 메인 -->
+<!-- COMMON -->
+
+<div class="commonSection1">
+    <div class="commonContent1">
+        <img
+                src="/img/member/sub-visual01.jpg"
+                style="width: 100%; height: 100%"
+        />
+        <div class="commonContent2 text-center">
+            <div>
+                <h3>관리자페이지</h3>
+            </div>
+            <div>
+                <p><img src="/img/icon-home.png"/> > 관리자페이지</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="adminMain">
+    <!-- 사이드메뉴 -->
+    <div id="adminSide">
+        <ul>
+            <li><a href="/admin/member">회원 관리</a></li>
+            <li>
+                <a href="/admin/notice" class="adminSideActive">공지사항 관리</a>
+            </li>
+        </ul>
+    </div>
+    <!-- 메인 -->
+    <div id="adminSection">
+        <form name="noticeEditForm" action="/api/community/notice/edit" method="post" onsubmit="return validateForm();">
+            <input type="hidden" name="memberId" th:value="${notice.noticeMemberId()}"/>
+            <input type="hidden" name="noticeId" th:value="${notice.noticeIdx()}"/>
+            <div class="adminDiv">
+                <h3>공지사항 관리</h3>
+            </div>
+            <div class="noticeViewTitle adminDiv2">
+                <input type="text" name="noticeTitle" th:value="${notice.noticeTitle()}"/>
+                <span>
+                    글쓴이:<span th:text="${notice.noticeMemberId()}">admin</span>
+                    글번호:<span th:text="${notice.noticeIdx()}">5</span>
+                </span>
+            </div>
+            <div class="adminDiv2">
+                <div class="noticeViewContent">
+                <textarea rows="5" cols="50" id="noticeContent" name="noticeContent"
+                          th:text="${notice.noticeContent()}"></textarea>
+                </div>
+            </div>
+            <div class="noticeViewBtns adminDiv2">
+                <div>
+                    <input type="submit" value="수정">
+                    <a th:href="|/api/community/notice/delete?id=${notice.noticeIdx()}|">삭제</a>
+                </div>
+                <div>
+                    <a href="/admin/notice">목록</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--<script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>-->
+<!--&lt;!&ndash; <script>CKEDITOR.replace('noticeContent');</script> &ndash;&gt;-->
+<!--<script>-->
+<!--    var ckeditor_config = {-->
+<!--        resize_enable: false,-->
+<!--        enterMode: CKEDITOR.ENTER_BR,-->
+<!--        shiftEnterMode: CKEDITOR.ENTER_P,-->
+<!--        fileBrowserUploadUrl: "/ckUpload",-->
+<!--    };-->
+<!--    CKEDITOR.replace("noticeContent", ckeditor_config);-->
+<!--</script>-->
+
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footerFragment" id="footer"></div>
+
+<script>
+    const validateForm = () => {
+        const form = document.forms["noticeEditForm"];
+        if (!form) return false;
+        const memberId = form["memberId"];
+        const noticeId = form["noticeId"];
+        const noticeTitle = form["noticeTitle"];
+        const noticeContent = form["noticeContent"];
+        const checkList = [
+            [memberId, "사용자 정보에 문제가 있습니다. 새로고침 해주세요."],
+            [noticeId, "공지 정보에 문제가 있습니다. 새로고침 해주세요."],
+            [noticeTitle, "제목을 입력해 주세요."],
+            [noticeContent, "내용을 입력해 주세요."],
+        ];
+        for (const [input, label] of checkList) {
+            if (input.value === "") {
+                alert(label);
+                input.focus();
+                return false;
+            }
+        }
+        return true;
+    }
+
+</script>
+</body>
+</html>

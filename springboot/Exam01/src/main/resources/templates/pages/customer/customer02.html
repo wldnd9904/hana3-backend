@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>묻고답하기</title>
+
+  <!-- Main CSS : Header, Main, Footer -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/customer/customer02.css">
+  <link rel="stylesheet" href="/css/customer/checkPW.css">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+  <!-- Bootstarp JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<!-- 헤더 -->
+<div th:replace="fragments/headerTop :: headerTopFragment" id="headerTop"></div>
+<header id="header" th:replace="fragments/header :: headerFragment" class="sticky-top"></header>
+
+  <!-- 메인 -->
+  <!-- 1:1문의 -->
+  <!-- COMMON -->
+  <div class="commonSection1">
+    <div class="commonContent1">
+      <img src="/img/member/sub-visual02.jpg"
+          style="width: 100%; height: 100%;">
+      <div class="commonContent2 text-center">
+        <div>
+          <h3>CUSTOMER</h3>
+        </div>
+        <div>
+          <p><img src="/img/icon-home.png"> > 고객지원 > 묻고답하기</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- COMMON - 드랍다운 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/"><button class="homeBtn">H</button></a>
+      <ul class="navbar-nav mr-auto navbar-nav-scroll"
+          style="max-height: 100px;">
+
+        <li class="nav-item dropdown dropdownHide">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+            data-toggle="dropdown" aria-expanded="false">
+            고객지원
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+            <li><a class="dropdown-item" href="#">회사소개</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">사업분야</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">제품안내</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">커뮤니티</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">고객지원</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown"
+              role="button" data-toggle="dropdown" aria-expanded="false">
+              묻고답하기
+          </a>
+          <ul class="dropdown-menu asd">
+            <li><a class="dropdown-item" href="/customer/one2one">1:1문의</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/customer/qna">묻고답하기</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/customer/faq">FAQ</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- 묻고답하기 -->
+  <div class="communitySection2 container text-center">
+    <div>
+      <div>묻고답하기</div>
+      <div>The design and maintenance are excellent.</div>
+    </div>
+    <div class="qna">
+      <table>
+        <tr>
+          <th>번호</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>작성일</th>
+        </tr>
+        <tr th:each="qna, status: ${paging}" th:onclick="|openCheckPwModal(${qna.qnaIdx()})|">
+          <td th:text="${paging.size * paging.number + status.index+1}">5</td>
+          <td>
+            <img src="/img/customer/icon_sct.gif">
+            <span th:text="${qna.qnaTitle()}">문의사항에 대해 자세한 답변 부탁합니다.</span>
+          </td>
+          <td th:text="${qna.qnaName()}">hong</td>
+          <td th:text="${#temporals.format(qna.qnaDate(),'yyyy-MM-dd')}">2019-06-19</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+<!-- 페이지 네비게이션 -->
+<div>
+  <!-- 페이징처리 시작 -->
+  <div th:if="${paging != null && !(paging.isEmpty())}">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+        <a class="page-link"
+           th:href="|?page=${paging.number-1}&limit=${paging.size}${(searchType != null)&&(searchValue != null)? '&searchType='+searchType+'&searchValue='+searchValue : '' }|">
+          <span>이전</span>
+        </a>
+      </li>
+      <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+          th:if="${page >= paging.number-5 and page <= paging.number+5}"
+          th:classappend="${page == paging.number} ? 'active'"
+          class="page-item">
+        <a th:text="${page+1}" class="page-link"
+           th:href="|?page=${page}&limit=${paging.size}${(searchType != null)&&(searchValue != null)? '&searchType='+searchType+'&searchValue='+searchValue : '' }|"></a>
+      </li>
+      <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+        <a class="page-link"
+           th:href="|?page=${paging.number+1}&limit=${paging.size}${(searchType != null)&&(searchValue != null)? '&searchType='+searchType+'&searchValue='+searchValue : '' }|">
+          <span>다음</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <!-- 페이징처리 끝 -->
+</div>
+
+<!-- 페이지 네비게이션 - 끝 -->
+
+
+<!-- search bar -->
+<div class="search container">
+  <table>
+    <tr>
+      <td>
+        <select name="searchType" id="searchType">
+          <option value="title" th:selected="${searchType=='title'}">제목</option>
+          <option value="content" th:selected="${searchType=='content'}">내용</option>
+          <option value="name" th:selected="${searchType=='name'}">작성자</option>
+        </select>
+      </td>
+      <td>
+        <input type="text" id="searchValue" th:value="${searchValue}">
+      </td>
+      <td>
+        <input type="image" src="/img/community/search.gif"
+               th:onclick="|search(${paging.size})|">
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footerFragment" id="footer"></div>
+
+<div id="darkLayer" onclick="closeModal();"></div>
+<div id="checkPwModal">
+  <div th:replace="pages/customer/fragments/customer02_3 :: checkPwFragment"></div>
+</div>
+
+  <script>
+    let targetOne2OneId;
+    const openCheckPwModal = (id) => {
+      targetOne2OneId = id;
+      $("#darkLayer")[0].style.display = "block";
+      $("#checkPwModal")[0].style.display = "block";
+    }
+    const closeModal = () => {
+      $("#checkPwPw")[0].innerText = "";
+      $("#darkLayer")[0].style.display = "none";
+      $("#checkPwModal")[0].style.display = "none";
+    }
+    /* 웹브라우저 back키 누를때, 페이지 재로딩 => 조회수 증가  */
+    window.onpageshow = function (event) {
+      if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        document.location.reload();
+      }
+    }
+    const search = (limit) => {
+      const searchType = document.getElementById("searchType").value;
+      const searchValue = document.getElementById("searchValue").value;
+      location.href = `/customer/qna?limit=${limit}&searchType=${searchType}&searchValue=${searchValue}`;
+    }
+  </script>
+</body>
+</html>

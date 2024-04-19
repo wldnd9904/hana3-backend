@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!-- footer -->
+<div th:fragment="checkPwFragment">
+    <form action="/api/customer/qna/check" method="post" name="checkPwForm" onsubmit="return validateForm();">
+        <table>
+            <tr>
+                <td colspan="2">비밀번호입력</td>
+            </tr>
+            <tr>
+                <td colspan="2">글 작성시 입력한 비밀번호를 입력하세요.</td>
+            </tr>
+            <tr>
+                <input type="hidden" name="qnaIdx" value="">
+                <td style="width: 20%;"><img src="../img/customer/txt_pass.gif"></td>
+                <td style="width: 80%;"><input type="password" name="qnaPw" id="checkPwPw"></td>
+            </tr>
+
+        </table>
+        <div>
+            <input type="image" src="../img/customer/btn_confirm.gif"/>
+        </div>
+    </form>
+    <script>
+        const validateForm = () => {
+            const form = document.forms["checkPwForm"];
+            const qnaIdx = form["qnaIdx"];
+            const qnaPw = form["qnaPw"];
+            if (!targetOne2OneId) return;
+            qnaIdx.value = targetOne2OneId;
+            if (qnaPw.value === "") {
+                alert("비밀번호를 입력해 주세요.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</div>
+</html>

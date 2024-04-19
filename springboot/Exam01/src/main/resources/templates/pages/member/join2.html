@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입2</title>
+
+    <!-- Main CSS : Header, Main, Footer -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/member/join.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+
+    <!-- Bootstarp JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<!-- 헤더 -->
+<div th:replace="fragments/headerTop :: headerTopFragment" id="headerTop"></div>
+<header id="header" th:replace="fragments/header :: headerFragment" class="sticky-top"></header>
+
+<!-- 메인 -->
+<!-- COMMON -->
+<div class="commonSection1">
+    <div class="commonContent1">
+        <img src="/img/member/sub-visual02.jpg"
+             style="width: 100%; height: 100%;">
+        <div class="commonContent2 text-center">
+            <div>
+                <h3>MEMBER</h3>
+            </div>
+            <div>
+                <p><img src="/img/icon-home.png"> > 회원가입</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 메인 -->
+<!-- 회원가입 -->
+<div class="joinForm container">
+
+    <div class="joinSection1">
+        <div><h3>회원가입</h3></div>
+        <div><p>The design and maintenance are excellent.</p></div>
+    </div>
+    <div class="wellcome">
+        <h3>OOO사이트에 오신 것을 환영합니다.</h3>
+        <h5>-이름과 이메일을 입력해 주시면 가입여부를 확인 후 회원가입 절차가 이루어집니다.</h5>
+    </div>
+    <br><br>
+    <div class="contents">
+        <h3>회원가입을 위해서 아래의 양식에 있는 내용을 입력해 주셔야 합니다.</h3>
+        <h5>-회원님의 개인정보를 신중하게 보호하고 있으며 회원님의 동의 없이는 기재하신 회원정보가 누출되지 않습니다.
+            자세한 내용은 개인정보보호정책에서 확인하세요.</h5>
+    </div>
+    <!-- 입력폼 -->
+    <form name="joinForm" action="/api/member/join" onsubmit="return validateForm();" method="post">
+        <div class="information1">
+            <div>기본정보</div>
+            <table>
+                <tr>
+                    <td>아이디</td>
+                    <td>
+                        <input type="text" name="userID">
+                        <img id="checkID" src="/img/member/btn_iddupl.gif" onclick="validateID();">
+                        (영문 소문자, 숫자로 4~16자)
+                        <span id="checkIDStatus"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>비밀번호</td>
+                    <td>
+                        <input type="password" name="userPW">
+                        4글자 이상
+                    </td>
+                </tr>
+                <tr>
+                    <td>비밀번호 확인</td>
+                    <td><input type="password" id="userPWCheck"></td>
+                </tr>
+                <tr>
+                    <td>이름</td>
+                    <td><input type="text" name="userName"></td>
+                </tr>
+                <tr>
+                    <td>이메일</td>
+                    <td><input type="text" name="userEmail"></td>
+                </tr>
+                <tr>
+                    <td>이메일 수신여부</td>
+                    <td>
+                        <input type="radio" name="emailReceive" value="1">수신
+                        <input type="radio" name="emailReceive" value="0">수신안함
+                    </td>
+                </tr>
+                <tr>
+                    <td>비밀번호 확인시 질문</td>
+                    <td>
+                        <select class="size" name="passwordCheckQuestion">
+                            <option value="">========선택========</option>
+                            <option value="1">기억에 남는 추억의 장소는?</option>
+                            <option value="2">자신의 인생 좌우명은?</option>
+                            <option value="3">자신의 보물 제1호는?</option>
+                            <option value="4">가장 기억에 남는 선생님 성함은?</option>
+                            <option value="5">내가 좋아하는 캐릭터는?</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>비밀번호 확인시 답변</td>
+                    <td><input type="text" name="passwordCheckAnswer" value=""></td>
+                </tr>
+                <tr>
+                    <td>성별</td>
+                    <td><input type="radio" name="gender" value="male">남자
+                        <input type="radio" name="gender" value="female">여자
+                    </td>
+                </tr>
+                <tr>
+                    <td>생년월일</td>
+                    <td>
+                        <input type="date" name="birthday"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="Information2">부가정보</div>
+        <div class="imageBtn2">
+            <input type="image" src="/img/member/btn_confirm.gif">
+            <a href="/">
+                <img src="/img/member/btn_cancel.gif">
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footerFragment" id="footer"></div>
+
+<script>
+    const validateForm = () => {
+        const form = document.forms["joinForm"];
+        if (!form) return false;
+        const userID = form["userID"];
+        const userPW = form["userPW"];
+        const userPWCheck = document.getElementById("userPWCheck");
+        const userName = form["userName"];
+        const userEmail = form["userEmail"];
+        const emailReceive = form["emailReceive"];
+        const passwordCheckQuestion = form["passwordCheckQuestion"];
+        const passwordCheckAnswer = form["passwordCheckAnswer"];
+        const gender = form["gender"];
+        const birthday = form["birthday"];
+
+        const checkList = [
+            [userID, "아이디를"],
+            [userPW, "비밀번호를"],
+            [userPWCheck, "비밀번호 확인을"],
+            [userName, "이름을"],
+            [userEmail, "이메일을"],
+            [emailReceive, "이메일 수신여부를"],
+            [passwordCheckQuestion, "비밀번호 확인시 질문을"],
+            [passwordCheckAnswer, "비밀번호 확인시 답변을"],
+            [gender, "성별을"],
+            [birthday, "생년월일을"]
+        ];
+
+        for (const [input, label] of checkList) {
+            if (input.value === "") {
+                alert(`${label} 입력해 주세요.`);
+                if (!(input instanceof RadioNodeList))
+                    input.focus();
+                return false;
+            }
+        }
+        if (!userID.readOnly) {
+            alert("아이디 중복확인을 해 주세요.");
+            userID.focus();
+            return false;
+        }
+        if (userPW.value.length < 4) {
+            alert("비밀번호는 4글자 이상이어야 합니다.")
+            userPW.focus();
+            return false;
+        }
+        if (userPW.value !== userPWCheck.value) {
+            alert("비밀번호 확인이 일치하지 않습니다.")
+            userPWCheck.focus();
+            return false;
+        }
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(userEmail.value)) {
+            alert("이메일 형식이 맞지 않습니다.");
+            userEmail.focus();
+            return false;
+        }
+        return true;
+    }
+    const validateID = () => {
+        const userID = document.forms["joinForm"]["userID"];
+        if (userID.value === "") {
+            alert("아이디를 입력해주세요.")
+            userID.focus();
+            return;
+        }
+        const idPattern = /^[a-z][a-z0-9]{3,15}$/;
+        if (!idPattern.test(userID.value)) {
+            alert("아이디는 영문 소문자와 숫자로 이루어진 4~16글자여야 합니다.")
+            userID.focus();
+            return;
+        }
+        fetch(`/api/member/checkID?userID=${userID.value}`).then(res => res.json()).then(json => {
+            if (json.status === 'green') {
+                userID.readOnly = true;
+                document.getElementById("checkID").style.display = "none";
+            }
+            document.getElementById("checkIDStatus").innerText = json.message;
+            document.getElementById("checkIDStatus").style.color = json.status;
+        });
+    }
+</script>
+</body>
+</html>

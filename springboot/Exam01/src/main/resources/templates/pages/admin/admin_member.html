@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회사홈페이지</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/admin/admin.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <!-- Bootstarp JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+<!-- 헤더 -->
+<div th:replace="fragments/headerTop :: headerTopFragment" id="headerTop"></div>
+<header id="header" th:replace="fragments/header :: headerFragment" class="sticky-top"></header>
+
+
+<!-- 메인 -->
+<!-- COMMON -->
+
+<div class="commonSection1">
+    <div class="commonContent1">
+        <img src="/img/member/sub-visual01.jpg"
+             style="width: 100%; height: 100%;">
+        <div class="commonContent2 text-center">
+            <div>
+                <h3>관리자페이지</h3>
+            </div>
+            <div>
+                <p><img src="/img/icon-home.png"> > 관리자페이지</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="adminMain">
+    <!-- 사이드메뉴 -->
+    <div id="adminSide">
+        <ul>
+            <li><a href="/admin/member" class="adminSideActive">회원 관리</a></li>
+            <li><a href="/admin/notice">공지사항 관리</a></li>
+        </ul>
+    </div>
+    <!-- 메인 -->
+    <div id="adminSection">
+        <div class="adminDiv">
+            <h3>회원관리</h3>
+        </div>
+        <div class="adminDiv">
+            검색 옵션
+            <select name="searchType" id="searchType">
+                <option value="all">전체</option>
+                <option value="id" th:selected="${searchType == 'id'}">아이디</option>
+                <option value="name" th:selected="${searchType == 'name'}">성명</option>
+                <option value="email" th:selected="${searchType == 'email'}">이메일</option>
+            </select>
+            <input type="text" name="searchValue" id="searchValue" th:value="${searchValue}">
+            <input type="image" src="/img/community/search.gif" onclick="search();">
+        </div>
+        <div class="adminDiv">
+            정렬
+            <select name="sortType" id="sortType" onchange="search();">
+                <option value="idAsc" th:selected="${sortType == 'idAsc'}">아이디 오름차순</option>
+                <option value="idDesc" th:selected="${sortType == 'idDesc'}">아이디 내림차순</option>
+                <option value="joinDateAsc" th:selected="${sortType == 'joinDateAsc'}">가입일 오름차순</option>
+                <option value="joinDateDesc" th:selected="${sortType == 'joinDateDesc'}">가입일 내림차순</option>
+            </select>
+        </div>
+        <div class="adminDiv2" id="tableTitle">
+            <div>회원목록 <span th:text="${paging.totalElements}"></span>건</div>
+            <div>한페이지 행수
+                <select class="size" name="limit" id="limit" onchange="search();">
+                    <option value="5" th:selected="${paging.size == 5}">5개만 보기</option>
+                    <option value="10" th:selected="${paging.size == 10}">10개만 보기</option>
+                    <option value="2147483647" th:selected="${paging.size == 2147483647}">전체 보기</option>
+                </select>
+            </div>
+        </div>
+        <div class="">
+            <table class="adminTable">
+                <thead>
+                <tr>
+                    <th>아이디</th>
+                    <th>성명</th>
+                    <th>이메일</th>
+                    <th>생일</th>
+                    <th>가입일</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="dto, status: ${paging}">
+                    <td th:text="${dto.memberId()}">hong</td>
+                    <td th:text="${dto.memberName()}">홍길동</td>
+                    <td th:text="${dto.memberEmail()}">test@gmail.com</td>
+                    <td th:text="${#temporals.format(dto.memberBirthDate(),'yyyy-MM-dd')}">2000-01-01</td>
+                    <td th:text="${#temporals.format(dto.memberJoinDate(),'yyyy-MM-dd')}">2024-04-09</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- 페이지 네비게이션 -->
+        <div class="mt-5">
+            <!-- 페이징처리 시작 -->
+            <div th:if="${paging != null && !(paging.isEmpty()) && (paging.totalPages != 1) }">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="|?page=${paging.number-1}&limit=${paging.size}${(searchType != null)&&(searchValue != null)? '&searchType='+searchType+'&searchValue='+searchValue : '' }${(sortType != null)? '&sortType='+sortType:''}|">
+                            <span>이전</span>
+                        </a>
+                    </li>
+                    <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                        th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                        th:classappend="${page == paging.number} ? 'active'"
+                        class="page-item">
+                        <a th:text="${page+1}" class="page-link"
+                           th:href="|?page=${page}&limit=${paging.size}${(searchType != null)&&(searchValue != null)? '&searchType='+searchType+'&searchValue='+searchValue : '' }${(sortType != null)? '&sortType='+sortType:''}|"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="|?page=${paging.number+1}&limit=${paging.size}${(searchType != null)&&(searchValue != null)? '&searchType='+searchType+'&searchValue='+searchValue : '' }${(sortType != null)? '&sortType='+sortType:''}|">
+                            <span>다음</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- 페이징처리 끝 -->
+        </div>
+
+        <!-- 페이지 네비게이션 - 끝 -->
+    </div>
+</div>
+
+
+<!-- 푸터 -->
+<div th:replace="fragments/footer :: footerFragment" id="footer"></div>
+
+<script>
+    const search = () => {
+        const searchType = $("#searchType")[0].value;
+        const searchValue = $("#searchValue")[0].value;
+        const sortType = $("#sortType")[0].value;
+        const limit = $("#limit")[0].value;
+        let destination = "/admin/member?"
+        if (searchType) destination += "&searchType=" + searchType;
+        if (searchValue) destination += "&searchValue=" + searchValue;
+        if (sortType) destination += "&sortType=" + sortType;
+        if (limit) destination += "&limit=" + limit;
+        location.href = destination;
+    }
+</script>
+</body>
+</html>
+
