@@ -41,8 +41,8 @@ public class NoticeService {
     public Page<NoticeResponseDto> findPage2(int page, int limit, String searchType,
                                              String searchValue, String sortType) {
         Pageable pageable = switch (sortType) {
-            case "idxAsc" -> PageRequest.of(page, limit, Sort.by("noticeIdx").ascending());
-            case "idxDesc" -> PageRequest.of(page, limit, Sort.by("noticeIdx").descending());
+            case "idAsc" -> PageRequest.of(page, limit, Sort.by("noticeMemberId").ascending());
+            case "idDesc" -> PageRequest.of(page, limit, Sort.by("noticeMemberId").descending());
             case "noticeDateAsc" -> PageRequest.of(page, limit, Sort.by("noticeDate").ascending());
             case "noticeDateDesc" -> PageRequest.of(page, limit, Sort.by("noticeDate").descending());
             default -> PageRequest.of(page, limit);

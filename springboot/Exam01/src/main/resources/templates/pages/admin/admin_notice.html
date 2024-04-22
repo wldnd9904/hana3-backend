@@ -87,8 +87,8 @@
         <div class="adminDiv">
             정렬
             <select name="sortType" id="sortType" onchange="search();">
-                <option value="idxAsc" th:selected="${sortType == 'idxAsc'}">아이디 오름차순</option>
-                <option value="idxDesc" th:selected="${sortType == 'idxDesc'}">아이디 내림차순</option>
+                <option value="idAsc" th:selected="${sortType == 'idAsc'}">아이디 오름차순</option>
+                <option value="idDesc" th:selected="${sortType == 'idDesc'}">아이디 내림차순</option>
                 <option value="noticeDateAsc" th:selected="${sortType == 'noticeDateAsc'}">등록일 오름차순</option>
                 <option value="noticeDateDesc" th:selected="${sortType == 'noticeDateDesc'}">등록일 내림차순</option>
             </select>
